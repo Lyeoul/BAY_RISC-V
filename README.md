@@ -43,3 +43,104 @@ CPU는 프로그램의 명령어(Instruction)를 순차적으로 처리하며, �
 
 ---
 
+다음은 이전 내용을 이어서 정리한 마크다운 형식의 발표 자료입니다.
+
+---
+
+```markdown
+## RISC-V 레지스터의 기능 및 특징
+
+RISC-V는 총 32개의 레지스터를 가지며, 각각의 레지스터는 특정한 용도와 특징을 가지고 있습니다. 효율적인 사용을 위해 레지스터는 Caller와 Callee가 저장해야 하는지 여부에 따라 구분됩니다.
+
+---
+
+### Caller saved vs. Callee saved
+
+- **Caller**: 함수를 호출하는 주체 (예: Main 함수)
+- **Callee**: 호출된 함수 (예: foo 함수)
+
+레지스터는 사용 가능한 개수가 제한되어 있어, Caller와 Callee가 동시에 사용할 경우 데이터가 사라질 수 있습니다. 이를 해결하기 위해 레지스터를 백업하고 복원하는 작업이 필요합니다. 이 작업을 누가 수행하느냐에 따라 아래와 같이 나뉩니다.
+
+| 구분 | 설명 |
+|------|------|
+| **Caller saved** | Caller가 저장해야 하는 레지스터이며, 호출 전 Caller가 백업하고 호출 후 복원해야 합니다. |
+| **Callee saved** | Callee가 저장해야 하는 레지스터이며, 호출된 함수에서 복원 책임이 있습니다. |
+
+---
+
+### 개별 레지스터 설명
+
+#### 1. x0 (Hard-wired zero)
+- 항상 값이 '0'으로 고정되어 있으며 변경 불가능합니다.
+- 연산에서 '0' 값을 효율적으로 사용하기 위해 활용됩니다.
+- 예시:
+  - `sw x0, 0(x10)` : 메모리 주소에 '0' 저장
+  - `addi x1, x0, 3` : x1에 '3' 저장 (x0 값이 0이므로 가능)
+  - Branch 명령어에서 0과 비교 시 활용 (`beqz`, `bnez`, 등)
+
+#### 2. x1 (Return address, Caller saved)
+- 함수 호출 후 돌아올 주소(Return address)를 저장합니다.
+- 예시:
+  ```assembly
+  jal x1, offset  # x1 = PC + 4; PC = PC + offset;
+  ret             # jalr x0, x1, 0; PC = x1;
+  ```
+
+#### 3. x2 (Stack pointer, Callee saved)
+- 스택의 마지막 주소를 저장하며, 스택은 주소가 작아지는 방향으로 증가합니다.
+- 공간 할당 시 주소가 감소하고, 반환 시 주소가 증가합니다.
+- 예시:
+  ```assembly
+  addi sp, sp, -32  # 스택 공간 할당
+  addi sp, sp, 32   # 스택 공간 반환
+  ```
+
+#### 4. x3 (Global pointer)
+- 전역 변수들이 저장된 영역의 Base address를 저장합니다.
+- 코드 크기와 명령어 수를 줄이기 위해 사용됩니다.
+
+#### 5. x4 (Thread pointer)
+- 멀티스레드 환경에서 각 스레드의 고유한 메모리 공간(Thread-local storage)의 주소를 저장합니다.
+
+---
+
+### Temporary registers와 Saved registers 구분
+
+| 구분 | 레지스터 | 설명 | 저장 책임 |
+|------|----------|------|-----------|
+| **Temporary registers** | x5-7, x28-31 | 임시로 사용되며 백업할 필요 없음 | Caller |
+| **Saved registers** | x8-9, x18-27 | 호출된 함수에서 반드시 백업 및 복원 필요 | Callee |
+
+---
+
+#### 6. x8 (Saved register/Frame pointer, Callee saved)
+- Stack frame을 관리하며, 호출된 함수에서 이전 Stack pointer 값을 저장하여 복원할 때 사용합니다.
+- Stack frame은 Caller로 돌아가기 위한 정보, Arguments, Local variables 등을 포함합니다.
+
+---
+
+#### 7. x10-11 (Function arguments/Return values, Caller saved)
+#### 8. x12-17 (Function arguments, Caller saved)
+- Caller가 Callee에게 전달하는 인자(arguments) 값을 저장합니다.
+- 함수 수행 후 결과값을 Caller에게 반환할 때 x10과 x11을 사용합니다.
+
+예시:
+```assembly
+# 함수 호출 시
+addi x10, x0, 5  # 첫 번째 인자
+addi x11, x0, 10 # 두 번째 인자
+jal x1, function # 함수 호출
+
+# 함수 내에서 결과 반환 시
+addi x10, x0, 15 # 결과값 반환
+ret              # Caller로 복귀
+```
+
+---
+
+## 결론
+
+RISC-V 레지스터는 효율적이고 명확한 규칙에 따라 사용됩니다. Caller saved와 Callee saved 개념을 통해 메모리 관리와 데이터 보호를 최적화할 수 있으며, 각 레지스터의 특성을 잘 이해하면 더욱 효율적인 프로그래밍이 가능합니다.
+```
+
+이 마크다운 자료를 GitHub의 README.md 파일로 활용하여 효과적인 발표 자료로 사용하실 수 있습니다.
