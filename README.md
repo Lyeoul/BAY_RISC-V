@@ -1,142 +1,128 @@
-# BAY_RISC-V
-
-# RISC-V 개념 및 CPU 구조 소개
-
-## 목차
-1. [RISC-V의 의미](#risc-v의-의미)
-2. [CPU의 기본 구조](#cpu의-기본-구조)
-3. [명령어 집합 (Instruction Set)](#명령어-집합-instruction-set)
-4. [ISA (Instruction Set Architecture)](#isa-instruction-set-architecture)
+아래는 주신 내용을 바탕으로 더욱 상세하고 체계적으로 구성한 발표 자료입니다. 마크다운 형식으로 작성하였으며, 제공해 주신 이미지도 모두 포함했습니다.
 
 ---
 
-## RISC-V의 의미
-
-**RISC-V**는 다음과 같은 의미를 가지고 있습니다.
-
-- **RISC**: Reduced Instruction Set Computer
-- **V**: 로마 숫자 '5'로, 다섯 번째 버전을 의미합니다.
-
-각각의 키워드를 나누어 설명하면:
-
-- **Reduced**: 작거나 적은 수량을 의미합니다.
-- **Instruction Set**: CPU가 사용하는 명령어들의 집합을 의미합니다.
-- **Computer**: 연산을 수행하는 장치를 의미합니다.
-
-즉, **RISC-V**는 적은 수의 명령어로 구성된 명령어 집합을 사용하는 컴퓨터를 의미합니다. RISC는 CISC(Complex Instruction Set Computer)와 대비되는 개념으로, 이 둘의 차이는 이후에 구체적으로 다루겠습니다.
+# 📌 RISC-V 아키텍처 소개 및 상세 구조
 
 ---
 
-## CPU의 기본 구조
+## 📖 목차
 
-CPU(Central Processing Unit)는 컴퓨터의 핵심 연산 장치로, Intel이나 AMD의 프로세서가 대표적입니다. CPU가 명령어를 처리하는 과정을 도식화하면 다음과 같습니다.
+1. [RISC-V란?](#1-risc-v란)
+2. [RISC-V 레지스터(Register)](#2-risc-v-레지스터register)
+3. [RISC-V 산술 및 논리 연산](#3-risc-v-산술-및-논리-연산)
+4. [CISC vs RISC](#4-cisc-vs-risc)
+
+---
+
+## 1. RISC-V란?
+
+### 🔸 RISC-V의 정의
+- **RISC-V**는 **Reduced Instruction Set Computer**의 5번째 버전을 의미
+- **Reduced (축소)**: 명령어의 수가 적고 간단함
+- **Instruction Set (명령어 집합)**: CPU가 수행 가능한 명령어들의 집합
+- **Computer**: 연산을 수행하는 장치 (CPU)
+
+### 🔸 CPU 구조 및 동작 원리
+CPU는 **Central Processing Unit**의 약자로, Intel, AMD와 같은 프로세서를 의미합니다.
 
 ![CPU 구조](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmXbDO%2FbtsGYzug5pL%2FylYV2fzvz7KyPCFQWS70M1%2Fimg.png)
 
-CPU는 프로그램의 명령어(Instruction)를 순차적으로 처리하며, 다음의 요소들로 구성됩니다.
+- **Program Counter (PC)**: 다음 수행할 명령어 주소 저장
+- **Register File**: 임시 데이터를 저장하는 공간
+  - 예: 중간 연산 결과 저장 (0+1=1, 1+2=3 등)
+- **ALU (Arithmetic & Logic Unit)**: 산술 및 논리 연산 수행
+  - 예: 더하기(+), 빼기(-) 등
+- **Control Logic**: 명령어를 메모리에서 가져오고 해석하여 ALU에 전달
 
-- **PC (Program Counter)**: 다음에 수행할 명령어의 주소를 저장하는 레지스터입니다.
-- **Register File**: 연산 과정에서 임시로 데이터를 저장하는 장소입니다.
-  - 예시: 0에서 10까지의 합을 계산할 때, 중간 결과값을 저장하는 용도로 사용됩니다.
-- **ALU (Arithmetic & Logic Unit)**: 산술 연산(예: 덧셈 '+')과 논리 연산을 수행합니다.
-- **Control Logic**: 명령어를 메모리에서 가져오고, 명령어의 종류를 판별하여 필요한 작업을 수행합니다.
-
----
-
-
-
-## RISC-V 레지스터의 기능 및 특징
-
-RISC-V는 총 32개의 레지스터를 가지며, 각각의 레지스터는 특정한 용도와 특징을 가지고 있습니다. 효율적인 사용을 위해 레지스터는 Caller와 Callee가 저장해야 하는지 여부에 따라 구분됩니다.
+### 🔸 ISA (Instruction Set Architecture)
+- ISA는 소프트웨어와 하드웨어 간의 인터페이스 역할
+- 소프트웨어: 애플리케이션 프로그램, 컴파일러, 운영체제
+- 하드웨어: CPU 설계, 회로 설계 및 칩 구조
+- ISA는 소프트웨어가 명령어를 사용하여 프로그램을 동작시키고, 하드웨어는 이를 실제로 수행하는 구조를 정의함
 
 ---
 
-### Caller saved vs. Callee saved
+## 2. RISC-V 레지스터(Register)
 
-- **Caller**: 함수를 호출하는 주체 (예: Main 함수)
-- **Callee**: 호출된 함수 (예: foo 함수)
+RISC-V는 총 32개의 레지스터를 사용합니다.
 
-레지스터는 사용 가능한 개수가 제한되어 있어, Caller와 Callee가 동시에 사용할 경우 데이터가 사라질 수 있습니다. 이를 해결하기 위해 레지스터를 백업하고 복원하는 작업이 필요합니다. 이 작업을 누가 수행하느냐에 따라 아래와 같이 나뉩니다.
+![RISC-V Register](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FtTRFp%2FbtsGYcF6dv7%2F6pTkmCUoV08VykNKkwPKD0%2Fimg.png)
 
-| 구분 | 설명 |
-|------|------|
-| **Caller saved** | Caller가 저장해야 하는 레지스터이며, 호출 전 Caller가 백업하고 호출 후 복원해야 합니다. |
-| **Callee saved** | Callee가 저장해야 하는 레지스터이며, 호출된 함수에서 복원 책임이 있습니다. |
+### 🔸 Caller-saved vs Callee-saved
+- **Caller-saved**: 호출자가 저장 및 복원 책임
+- **Callee-saved**: 호출받는 함수가 저장 및 복원 책임
 
----
+### 🔸 주요 레지스터 설명
 
-### 개별 레지스터 설명
+| Register | Name        | Description                          | Saved By |
+|----------|-------------|--------------------------------------|----------|
+| x0       | zero        | 항상 0, 변경 불가                     | -        |
+| x1       | ra          | Return Address (리턴 주소)            | Caller   |
+| x2       | sp          | Stack Pointer (스택 포인터)           | Callee   |
+| x3       | gp          | Global Pointer (글로벌 변수 기반 주소)| -        |
+| x4       | tp          | Thread Pointer (스레드 로컬 저장소)   | -        |
+| x5-7     | t0-t2       | 임시 레지스터                         | Caller   |
+| x8       | fp/s0       | Frame Pointer (프레임 포인터)         | Callee   |
+| x9       | s1          | 저장 레지스터                         | Callee   |
+| x10-11   | a0-a1       | 함수 인자/리턴 값                     | Caller   |
+| x12-17   | a2-a7       | 함수 인자                             | Caller   |
+| x18-27   | s2-s11      | 저장 레지스터                         | Callee   |
+| x28-31   | t3-t6       | 임시 레지스터                         | Caller   |
 
-#### 1. x0 (Hard-wired zero)
-- 항상 값이 '0'으로 고정되어 있으며 변경 불가능합니다.
-- 연산에서 '0' 값을 효율적으로 사용하기 위해 활용됩니다.
-- 예시:
-  - `sw x0, 0(x10)` : 메모리 주소에 '0' 저장
-  - `addi x1, x0, 3` : x1에 '3' 저장 (x0 값이 0이므로 가능)
-  - Branch 명령어에서 0과 비교 시 활용 (`beqz`, `bnez`, 등)
-
-#### 2. x1 (Return address, Caller saved)
-- 함수 호출 후 돌아올 주소(Return address)를 저장합니다.
-- 예시:
-  ```assembly
-  jal x1, offset  # x1 = PC + 4; PC = PC + offset;
-  ret             # jalr x0, x1, 0; PC = x1;
-
-#### 3. x2 (Stack pointer, Callee saved)
-- 스택의 마지막 주소를 저장하며, 스택은 주소가 작아지는 방향으로 증가합니다.
-- 공간 할당 시 주소가 감소하고, 반환 시 주소가 증가합니다.
-- 예시:
-  ```assembly
-  addi sp, sp, -32  # 스택 공간 할당
-  addi sp, sp, 32   # 스택 공간 반환
-  ```
-
-#### 4. x3 (Global pointer)
-- 전역 변수들이 저장된 영역의 Base address를 저장합니다.
-- 코드 크기와 명령어 수를 줄이기 위해 사용됩니다.
-
-#### 5. x4 (Thread pointer)
-- 멀티스레드 환경에서 각 스레드의 고유한 메모리 공간(Thread-local storage)의 주소를 저장합니다.
-
----
-
-### Temporary registers와 Saved registers 구분
-
-| 구분 | 레지스터 | 설명 | 저장 책임 |
-|------|----------|------|-----------|
-| **Temporary registers** | x5-7, x28-31 | 임시로 사용되며 백업할 필요 없음 | Caller |
-| **Saved registers** | x8-9, x18-27 | 호출된 함수에서 반드시 백업 및 복원 필요 | Callee |
-
----
-
-#### 6. x8 (Saved register/Frame pointer, Callee saved)
-- Stack frame을 관리하며, 호출된 함수에서 이전 Stack pointer 값을 저장하여 복원할 때 사용합니다.
-- Stack frame은 Caller로 돌아가기 위한 정보, Arguments, Local variables 등을 포함합니다.
-
----
-
-#### 7. x10-11 (Function arguments/Return values, Caller saved)
-#### 8. x12-17 (Function arguments, Caller saved)
-- Caller가 Callee에게 전달하는 인자(arguments) 값을 저장합니다.
-- 함수 수행 후 결과값을 Caller에게 반환할 때 x10과 x11을 사용합니다.
-
-예시:
+### 🔸 Stack Pointer (sp) 동작 예시
+- RISC-V는 주소가 작아지는 방향으로 스택을 사용
+- 공간 할당 및 반환 예시
 ```assembly
-# 함수 호출 시
-addi x10, x0, 5  # 첫 번째 인자
-addi x11, x0, 10 # 두 번째 인자
-jal x1, function # 함수 호출
+addi sp, sp, -32  # 할당
+addi sp, sp, 32   # 반환
+```
+![Stack Pointer](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FUFWgy%2FbtsGYR9mRgm%2FVUoyan2uafCnhqNuTdVFn1%2Fimg.png)
 
-# 함수 내에서 결과 반환 시
-addi x10, x0, 15 # 결과값 반환
-ret              # Caller로 복귀
+### 🔸 Frame Pointer (fp) 예시
+- 이전 스택 포인터 저장 및 복원
+![Frame Pointer](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fw6cOh%2FbtsGYNMP1j9%2FYtVT9OpEvQ8BsaUkWkwUYK%2Fimg.png)
+
+### 🔸 함수 호출 시 인자 전달 예시
+![Function Call](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FuREds%2FbtsG0HEd3IR%2FfZS3eRJ14viLOZtGTk8G4K%2Fimg.png)
+
+---
+
+## 3. RISC-V 산술 및 논리 연산
+
+### 🔸 기본 형태 및 특징
+- 명령어 형태: `Destination = Source1 op Source2`
+- 모든 ALU 연산은 레지스터를 통해서만 가능 (메모리 접근 불가)
+- 메모리 접근은 Load/Store 명령어로만 가능
+
+### 🔸 명령어 포맷
+- **R-type**: 기본 산술 연산
+![R-type](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fddjo4r%2FbtsG0cqYkuW%2FtmSf2eSF4MOz8kBoQVwVJk%2Fimg.png)
+
+- **I-type**: Immediate 값 사용 연산
+![I-type](https://github.com/user-attachments/assets/0b49819c-d27a-48cb-8330-8e2db346e0f2)
+
+- **U-type**: 상위 20비트 설정 (lui 명령어)
+![U-type](https://github.com/user-attachments/assets/9cc98e95-ef73-4df6-ba5a-65c553572d24)
+
+### 🔸 Multiply 연산 예시 (Shift & Add 조합)
+```assembly
+slli a5, a1, 1   # y * 2
+add  a1, a5, a1  # 2y + y = 3y
+slli a5, a1, 4   # 3y * 16 = 48y
 ```
 
 ---
 
-## 결론
+## 4. CISC vs RISC
 
-RISC-V 레지스터는 효율적이고 명확한 규칙에 따라 사용됩니다. Caller saved와 Callee saved 개념을 통해 메모리 관리와 데이터 보호를 최적화할 수 있으며, 각 레지스터의 특성을 잘 이해하면 더욱 효율적인 프로그래밍이 가능합니다.
-```
+| 특징                   | CISC (복합)                          | RISC (축소)                            |
+|------------------------|-------------------------------------|----------------------------------------|
+| 명령어 종류            | 많고 복잡, 길이 다양                | 적고 간단, 길이 동일                  |
+| 메모리 접근            | 다양한 명령어에서 가능              | Load/Store 명령어만 가능               |
+| 실행 방식              | 일반적으로 스택 기반                | 레지스터 기반                          |
+| Condition Code 사용    | 사용 (상태 플래그)                  | 미사용 (별도 명령어로 처리)            |
 
-이 마크다운 자료를 GitHub의 README.md 파일로 활용하여 효과적인 발표 자료로 사용하실 수 있습니다.
+---
+
+이 자료는 RISC-V 아키텍처의 개념과 구조, 주요 명령어 및 레지스터의 역할을 상세히 이해하기 위한 것입니다.
