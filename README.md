@@ -23,7 +23,7 @@
 - **Computer**: 연산을 수행하는 장치 (CPU)
 
 ### 🔸 CPU 구조 및 동작 원리
-CPU는 **Central Processing Unit**의 약자로, Intel, AMD와 같은 프로세서를 의미합니다.
+CPU는 **Central Processing Unit**의 약자로, Intel, AMD와 같은 프로세서를 의미
 
 ![CPU 구조](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FmXbDO%2FbtsGYzug5pL%2FylYV2fzvz7KyPCFQWS70M1%2Fimg.png)
 
@@ -44,7 +44,7 @@ CPU는 **Central Processing Unit**의 약자로, Intel, AMD와 같은 프로세�
 
 ## 2. RISC-V 레지스터(Register)
 
-RISC-V는 총 32개의 레지스터를 사용합니다.
+RISC-V는 총 32개의 레지스터를 사용
 
 ![RISC-V Register](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FtTRFp%2FbtsGYcF6dv7%2F6pTkmCUoV08VykNKkwPKD0%2Fimg.png)
 
